@@ -1,4 +1,5 @@
-🛒 Lista de Compras - API
+🛒 Lista de Compras -
+
 API com Node.js e Express para gerenciar uma lista de compras.
 
 Funcionalidades:
