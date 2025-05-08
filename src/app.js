@@ -28,6 +28,15 @@ app.post("/items", (req, res) => {
 })
 
 app.get("/items", (req, res) => {
+    const { categoria } = req.query
+
+    if(categoria){
+        const categories = shoppingList.filter(t => {
+            return t.type.toLowerCase().includes(categoria.toLowerCase());
+        })
+        return res.send(categories)
+    }
+    
     res.send(shoppingList);
 })
 
