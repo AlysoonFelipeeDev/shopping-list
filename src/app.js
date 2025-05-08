@@ -2,15 +2,16 @@ import express, {json} from "express";
 
 const app = express();
 const port = 5000
+app.use(json())
 
 const shoppingList = [];
 
-app.post("items", (req, res) => {
+app.post("/items", (req, res) => {
     const { name, quantity, type} = req.body;
 
     if(
         typeof name !== 'string' || name.trim() === '' ||
-        !Number.isInteger(quantity) || quantity >= 0 ||
+        !Number.isInteger(quantity) || quantity <= 0 ||
         typeof type !== 'string' || type.trim() === ''
     ){
         return res.status(422).send("Todos os dados são obrigatórios!");
@@ -25,6 +26,11 @@ app.post("items", (req, res) => {
     shoppingList.push(addNewItem);
     res.status(201).send("Item adicionado");
 })
+
+app.get("/items", (req, res) => {
+    res.send(shoppingList);
+})
+
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`)
 });
