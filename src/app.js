@@ -1,4 +1,5 @@
 import express, {json} from "express";
+import httpStatus from "http-status";
 
 const app = express();
 const port = 5000
@@ -14,17 +15,17 @@ app.post("/items", (req, res) => {
         !Number.isInteger(quantity) || quantity <= 0 ||
         typeof type !== 'string' || type.trim() === ''
     ){
-        return res.status(422).send("Todos os dados são obrigatórios!");
+        return res.status(httpStatus.UNPROCESSABLE_ENTITY).send("Todos os dados são obrigatórios!");
     }
 
     const addNewItem = { id: shoppingList.length +1, ...req.body };
     const equalItens = shoppingList.some(n => n.name === addNewItem.name);
     if(equalItens){
-        return res.status(409).send("Já existe esse item!")
+        return res.status(httpStatus.CONFLICT).send("Já existe esse item!")
     }
 
     shoppingList.push(addNewItem);
-    res.status(201).send("Item adicionado");
+    res.status(httpStatus.CREATED).send("Item adicionado");
 })
 
 app.get("/items", (req, res) => {
@@ -44,14 +45,14 @@ app.get("/items/:id", (req, res) => {
     const id = Number(req.params.id);
 
     if(!Number.isInteger(id) || id <= 0){
-        return res.sendStatus(400)
+        return res.sendStatus(httpStatus.BAD_REQUEST)
     }
 
     const itemId = shoppingList.find(i => {
         return i.id === id
     })
     if(!itemId){
-        return res.sendStatus(404)
+        return res.sendStatus(httpStatus.NOT_FOUND)
     }
 
     res.send(itemId);
