@@ -17,7 +17,7 @@ app.post("/items", (req, res) => {
         return res.status(422).send("Todos os dados são obrigatórios!");
     }
 
-    const addNewItem = { name, quantity, type };
+    const addNewItem = { id: shoppingList.length +1, ...req.body };
     const equalItens = shoppingList.some(n => n.name === addNewItem.name);
     if(equalItens){
         return res.status(409).send("Já existe esse item!")
@@ -36,8 +36,25 @@ app.get("/items", (req, res) => {
         })
         return res.send(categories)
     }
-    
+
     res.send(shoppingList);
+})
+
+app.get("/items/:id", (req, res) => {
+    const id = Number(req.params.id);
+
+    if(!Number.isInteger(id) || id <= 0){
+        return res.sendStatus(400)
+    }
+
+    const itemId = shoppingList.find(i => {
+        return i.id === id
+    })
+    if(!itemId){
+        return res.sendStatus(404)
+    }
+
+    res.send(itemId);
 })
 
 app.listen(port, () => {
